@@ -222,8 +222,8 @@
                     <h2 class="text-2xl font-black text-slate-800 uppercase italic">Resumen de Perfiles</h2>
                     <p class="text-slate-500 text-sm">Historial de cargas y velocidades registradas.</p>
                 </div>
-                <!-- BOTÓN MODIFICADO: Solo texto Descargar registro -->
-                <button onclick="exportData()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl uppercase tracking-widest hover:bg-slate-700 transition">Descargar registro</button>
+                <!-- BOTÓN DE DESCARGA: Se asegura el texto 'Descargar registro' -->
+                <button id="exportButton" onclick="exportData()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl uppercase tracking-widest hover:bg-slate-700 transition">Descargar registro</button>
             </header>
 
             <div id="rmGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
@@ -310,7 +310,6 @@
             const time = (endFrame - startFrame) / (parseFloat(fpsInput.value) || 30);
             const velMedia = (parseFloat(document.getElementById('distanceInput').value) / 100) / time;
 
-            // Mostrar resumen rápido
             document.getElementById('lastRepSummary').classList.remove('hidden');
             document.getElementById('lastVM').textContent = velMedia.toFixed(2);
 
