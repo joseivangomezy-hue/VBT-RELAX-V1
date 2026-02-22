@@ -43,7 +43,6 @@
             background-color: #f0fdf4 !important;
             color: #047857 !important;
         }
-        /* Suavizar el scroll general */
         html {
             scroll-behavior: smooth;
         }
@@ -59,20 +58,23 @@
                 <p class="text-slate-500 text-sm font-medium">Análisis de Video & Auto-regulación</p>
             </header>
 
-            <!-- EJERCICIOS (Navegación Fija) -->
-            <section class="bg-white p-1.5 rounded-2xl custom-shadow border border-slate-100 max-w-3xl mx-auto">
+            <!-- NAVEGACIÓN (Pestañas) -->
+            <section class="bg-white p-1.5 rounded-2xl custom-shadow border border-slate-100 max-w-4xl mx-auto">
                 <div class="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-xl">
-                    <button onclick="switchExercise('bench')" id="tab-bench" class="flex-1 py-2 px-3 rounded-lg text-xs md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Press Banca</button>
-                    <button onclick="switchExercise('squat')" id="tab-squat" class="flex-1 py-2 px-3 rounded-lg text-xs md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Sentadilla</button>
-                    <button onclick="switchExercise('deadlift')" id="tab-deadlift" class="flex-1 py-2 px-3 rounded-lg text-xs md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Peso Muerto</button>
-                    <button onclick="switchExercise('pullup')" id="tab-pullup" class="flex-1 py-2 px-3 rounded-lg text-xs md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Dominadas</button>
+                    <button onclick="switchExercise('bench')" id="tab-bench" class="flex-1 py-2 px-3 rounded-lg text-[10px] md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Press Banca</button>
+                    <button onclick="switchExercise('squat')" id="tab-squat" class="flex-1 py-2 px-3 rounded-lg text-[10px] md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Sentadilla</button>
+                    <button onclick="switchExercise('deadlift')" id="tab-deadlift" class="flex-1 py-2 px-3 rounded-lg text-[10px] md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Peso Muerto</button>
+                    <button onclick="switchExercise('pullup')" id="tab-pullup" class="flex-1 py-2 px-3 rounded-lg text-[10px] md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700">Dominadas</button>
+                    <button onclick="switchExercise('history')" id="tab-history" class="flex-1 py-2 px-3 rounded-lg text-[10px] md:text-sm font-bold transition-all text-slate-500 hover:text-slate-700 bg-slate-200/50">📊 Progreso</button>
                 </div>
             </section>
         </div>
     </div>
 
     <div class="max-w-6xl mx-auto p-4 md:p-8">
-        <main class="space-y-6">
+        
+        <!-- VISTA DE ANALIZADOR (POR DEFECTO) -->
+        <main id="analyzerView" class="space-y-6">
             
             <!-- SECCIÓN DE CARGA DE VIDEO Y VELOCIDAD DE REFERENCIA -->
             <section class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
@@ -104,7 +106,6 @@
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
                 <!-- COLUMNA IZQUIERDA: ANALIZADOR -->
                 <div class="lg:col-span-7 space-y-6">
                     <div class="bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video relative flex items-center justify-center border-4 border-slate-200">
@@ -121,17 +122,11 @@
                     <div class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex gap-2">
-                                <!-- Botón Retroceder -->
-                                <button onclick="stepFrame(-1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition" title="Retroceder 1 frame">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M8.445 14.832A1 1 0 0010 14V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
-                                    </svg>
+                                <button onclick="stepFrame(-1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M8.445 14.832A1 1 0 0010 14V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" /></svg>
                                 </button>
-                                <!-- Botón Avanzar -->
-                                <button onclick="stepFrame(1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition" title="Avanzar 1 frame">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M11.555 14.832A1 1 0 0110 14V6a1 1 0 011.555-.832l6 4a1 1 0 010 1.664l-6 4z" />
-                                    </svg>
+                                <button onclick="stepFrame(1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M11.555 14.832A1 1 0 0110 14V6a1 1 0 011.555-.832l6 4a1 1 0 010 1.664l-6 4z" /></svg>
                                 </button>
                             </div>
                             <input type="range" id="frameSlider" value="0" min="0" step="1" class="flex-grow mx-4 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
@@ -162,33 +157,21 @@
                         <div class="mb-6">
                             <p class="text-[10px] font-black text-slate-400 uppercase mb-3 text-center">Modo de registro</p>
                             <div class="flex gap-2">
-                                <button onclick="setRegMode('profile')" id="btnModeProfile" class="mode-active-profile flex-1 py-3 px-2 rounded-xl text-xs font-bold transition-all border-2 border-blue-200">
-                                    Perfil Base
-                                </button>
-                                <button onclick="setRegMode('daily')" id="btnModeDaily" class="flex-1 py-3 px-2 rounded-xl text-xs font-bold transition-all border-2 border-transparent bg-slate-200 text-slate-500">
-                                    Test Diario
-                                </button>
+                                <button onclick="setRegMode('profile')" id="btnModeProfile" class="mode-active-profile flex-1 py-3 px-2 rounded-xl text-xs font-bold transition-all border-2 border-blue-200">Perfil Base</button>
+                                <button onclick="setRegMode('daily')" id="btnModeDaily" class="flex-1 py-3 px-2 rounded-xl text-xs font-bold transition-all border-2 border-transparent bg-slate-200 text-slate-500">Test Diario</button>
                             </div>
                         </div>
 
-                        <button onclick="processCurrentMeasurement()" class="w-full py-4 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition font-black text-sm uppercase tracking-widest shadow-lg">
-                            Registrar Levantamiento
-                        </button>
+                        <button onclick="processCurrentMeasurement()" class="w-full py-4 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition font-black text-sm uppercase tracking-widest shadow-lg">Registrar Levantamiento</button>
                     </div>
                 </div>
 
-                <!-- COLUMNA DERECHA: RESULTADOS -->
+                <!-- COLUMNA DERECHA: RESULTADOS RÁPIDOS -->
                 <div class="lg:col-span-5 space-y-6">
-                    
-                    <!-- PERFIL EDITABLE -->
                     <section class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest" id="exerciseTitle">Perfil Base</h2>
-                            <button onclick="clearCurrentExercise()" class="text-[10px] font-bold text-rose-400 hover:text-rose-600 uppercase">Reiniciar</button>
                         </div>
-                        
-                        <div class="space-y-3 mb-6" id="entriesList"></div>
-                        
                         <div id="rmResultContainer" class="p-6 bg-slate-900 rounded-2xl text-white hidden shadow-lg overflow-hidden">
                             <div class="flex justify-between items-start">
                                 <div>
@@ -204,81 +187,60 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="noDataWarning" class="text-center py-6 text-slate-400 text-xs italic">Añade al menos 2 levantamientos para generar el perfil.</div>
                     </section>
 
-                    <!-- RM DIARIO -->
                     <section id="dailyAdjustSection" class="bg-white p-6 rounded-2xl custom-shadow border-2 border-transparent hidden">
                         <div class="flex items-center justify-between mb-4">
-                            <h2 class="text-sm font-black text-emerald-600 uppercase tracking-widest flex items-center">
-                                <span class="bg-emerald-100 p-1.5 rounded-lg mr-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                </span>
-                                Ajuste del Día
-                            </h2>
-                            <button onclick="resetDaily()" class="text-[10px] font-bold text-slate-400 hover:text-rose-500 uppercase">Borrar Test</button>
+                            <h2 class="text-sm font-black text-emerald-600 uppercase tracking-widest flex items-center">Ajuste del Día</h2>
+                            <button onclick="resetDaily()" class="text-[10px] font-bold text-slate-400 hover:text-rose-500 uppercase">Borrar</button>
                         </div>
-
                         <div class="p-5 bg-emerald-600 rounded-xl text-white">
-                            <div class="flex justify-between items-end mb-4">
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase opacity-80 mb-1">1RM Real de Hoy</p>
-                                    <div class="flex items-baseline gap-1">
-                                        <span id="dailyRMValue" class="text-5xl font-black">0.0</span>
-                                        <span class="text-sm font-bold">kg</span>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p id="dailyDiff" class="text-xs font-bold bg-white/20 px-2 py-1 rounded-lg">--</p>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/20">
-                                <div>
-                                    <p class="text-[9px] font-black uppercase opacity-60 leading-none mb-1 text-emerald-100">Velocidad</p>
-                                    <div class="flex items-baseline gap-1">
-                                        <span id="dailyMeasuredVel" class="text-2xl font-mono font-bold">0.00</span>
-                                        <span class="text-[10px] font-bold uppercase">m/s</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-[9px] font-black uppercase opacity-60 leading-none mb-1 text-emerald-100">Carga Test</p>
-                                    <div class="flex items-baseline gap-1">
-                                        <span id="dailyMeasuredLoad" class="text-2xl font-bold">0</span>
-                                        <span class="text-[10px] font-bold uppercase">kg</span>
-                                    </div>
-                                </div>
+                            <p class="text-[10px] font-bold uppercase opacity-80 mb-1">1RM Real de Hoy</p>
+                            <div class="flex items-baseline justify-between">
+                                <span id="dailyRMValue" class="text-5xl font-black">0.0</span>
+                                <p id="dailyDiff" class="text-xs font-bold bg-white/20 px-2 py-1 rounded-lg">--</p>
                             </div>
                         </div>
                     </section>
 
-                    <!-- PLANIFICADOR -->
                     <section id="plannerSection" class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100 hidden">
-                        <h2 class="text-sm font-bold text-slate-400 uppercase mb-4 tracking-widest">Planificador RPE</h2>
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-tight">Repeticiones</label>
-                                <input type="number" id="planReps" value="5" min="1" max="12" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-tight">RPE Objetivo</label>
-                                <select id="planRPE" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold">
-                                    <option value="10">10</option><option value="9.5">9.5</option>
-                                    <option value="9" selected>9</option><option value="8.5">8.5</option>
-                                    <option value="8">8</option><option value="7.5">7.5</option>
-                                    <option value="7">7</option><option value="6.5">6.5</option>
-                                    <option value="6">6</option>
-                                </select>
-                            </div>
+                        <h2 class="text-sm font-bold text-slate-400 uppercase mb-4 tracking-widest">Planificador</h2>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <input type="number" id="planReps" value="5" class="p-3 bg-slate-50 border rounded-xl font-bold" title="Repeticiones">
+                            <select id="planRPE" class="p-3 bg-slate-50 border rounded-xl font-bold">
+                                <option value="10">RPE 10</option><option value="9.5">RPE 9.5</option><option value="9" selected>RPE 9</option><option value="8.5">RPE 8.5</option><option value="8">RPE 8</option>
+                            </select>
                         </div>
-                        <div id="suggestedBox" class="p-6 bg-slate-50 rounded-2xl border border-slate-200 text-center transition-all">
-                            <p class="text-xs font-bold text-slate-400 uppercase mb-1 tracking-wider">Carga Sugerida</p>
-                            <div class="flex justify-center items-baseline gap-2 text-slate-800">
-                                <span id="suggestedWeight" class="text-5xl font-black">0.0</span>
-                                <span class="text-lg font-bold">kg</span>
-                            </div>
-                            <p id="intensityInfo" class="text-[10px] text-slate-400 mt-2 font-black uppercase tracking-widest"></p>
+                        <div id="suggestedBox" class="p-4 bg-slate-50 rounded-2xl border text-center">
+                            <p id="suggestedWeight" class="text-4xl font-black text-slate-800">0.0 kg</p>
+                            <p id="intensityInfo" class="text-[9px] text-slate-400 font-bold uppercase mt-1"></p>
                         </div>
                     </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- VISTA DE HISTORIAL / PROGRESO -->
+        <main id="historyView" class="hidden space-y-8 animate-in fade-in duration-500">
+            <header class="flex justify-between items-end">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-800 uppercase italic">Resumen de Perfiles</h2>
+                    <p class="text-slate-500 text-sm">Estado actual de todos tus levantamientos principales.</p>
+                </div>
+                <button onclick="exportData()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl uppercase tracking-widest hover:bg-slate-700">Respaldar Datos</button>
+            </header>
+
+            <!-- Grid de RMs actuales -->
+            <div id="rmGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Se rellena con JS -->
+            </div>
+
+            <!-- Listado Detallado Editable -->
+            <div class="space-y-6">
+                <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">Registros por Ejercicio</h3>
+                <div id="exerciseHistoryLists" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Se rellena con JS -->
                 </div>
             </div>
         </main>
@@ -302,38 +264,47 @@
             12: { 10: 67, 9.5: 65, 9: 63, 8.5: 61, 8: 60, 7.5: 58, 7: 57, 6.5: 55, 6: 53, 5.5: 51, 5: 49 }
         };
 
-        const videoInput = document.getElementById('videoInput');
-        const videoPlayer = document.getElementById('videoPlayer');
-        const frameSlider = document.getElementById('frameSlider');
-        const fpsInput = document.getElementById('fpsInput');
-        const entriesList = document.getElementById('entriesList');
-        
         let currentExercise = 'bench';
         let registrationMode = 'profile'; 
         let allData = JSON.parse(localStorage.getItem('vbt_data')) || { bench: [], squat: [], deadlift: [], pullup: [] };
         let dailyRM = null;
-        let profileRM = 0;
-        let currentSlope = 0;
         let startFrame = null, endFrame = null;
+
+        const videoInput = document.getElementById('videoInput');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const frameSlider = document.getElementById('frameSlider');
+        const fpsInput = document.getElementById('fpsInput');
 
         window.onload = () => switchExercise(currentExercise);
 
         function switchExercise(ex) {
             currentExercise = ex;
-            Object.keys(EX_NAMES).forEach(key => document.getElementById(`tab-${key}`).classList.toggle('tab-active', key === ex));
-            document.getElementById('v1rmDisplay').textContent = `${V1RM[ex].toFixed(2)} m/s`;
-            document.getElementById('exerciseTitle').textContent = `Perfil: ${EX_NAMES[ex]}`;
-            dailyRM = null;
-            document.getElementById('dailyAdjustSection').classList.add('hidden');
-            document.getElementById('suggestedBox').className = "p-6 bg-slate-50 rounded-2xl border border-slate-200 text-center transition-all";
-            updateUI();
+            
+            // Actualizar Tabs UI
+            ['bench', 'squat', 'deadlift', 'pullup', 'history'].forEach(key => {
+                const el = document.getElementById(`tab-${key}`);
+                if(el) el.classList.toggle('tab-active', key === ex);
+            });
+
+            if (ex === 'history') {
+                document.getElementById('analyzerView').classList.add('hidden');
+                document.getElementById('historyView').classList.remove('hidden');
+                renderHistory();
+            } else {
+                document.getElementById('analyzerView').classList.remove('hidden');
+                document.getElementById('historyView').classList.add('hidden');
+                document.getElementById('v1rmDisplay').textContent = `${V1RM[ex].toFixed(2)} m/s`;
+                document.getElementById('exerciseTitle').textContent = `Perfil: ${EX_NAMES[ex]}`;
+                dailyRM = null;
+                document.getElementById('dailyAdjustSection').classList.add('hidden');
+                updateUI();
+            }
         }
 
         function setRegMode(mode) {
             registrationMode = mode;
             const bProfile = document.getElementById('btnModeProfile');
             const bDaily = document.getElementById('btnModeDaily');
-            
             if (mode === 'profile') {
                 bProfile.className = 'mode-active-profile flex-1 py-3 px-2 rounded-xl text-xs font-bold transition-all border-2 border-blue-200';
                 bDaily.className = 'flex-1 py-3 px-2 rounded-xl text-xs font-bold transition-all border-2 border-transparent bg-slate-200 text-slate-500';
@@ -343,31 +314,15 @@
             }
         }
 
+        // --- LÓGICA DE VIDEO ---
         videoInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
             videoPlayer.src = URL.createObjectURL(file);
-            document.getElementById('processingOverlay').classList.remove('hidden');
-            videoPlayer.onloadedmetadata = async () => {
-                const fps = await detectFPS(videoPlayer);
-                fpsInput.value = Math.round(fps);
-                frameSlider.max = Math.floor(videoPlayer.duration * fps);
-                document.getElementById('processingOverlay').classList.add('hidden');
+            videoPlayer.onloadedmetadata = () => {
+                frameSlider.max = Math.floor(videoPlayer.duration * parseFloat(fpsInput.value));
             };
         });
-
-        async function detectFPS(v) {
-            return new Promise(res => {
-                if (!v.requestVideoFrameCallback) return res(30);
-                let f = [];
-                const cb = (_, m) => {
-                    if (m.mediaTime !== undefined) f.push(m.mediaTime);
-                    if (f.length < 30) v.requestVideoFrameCallback(cb);
-                    else { v.pause(); res(f.length ? 1/((f[f.length-1]-f[0])/f.length) : 30); }
-                };
-                v.play().then(() => v.requestVideoFrameCallback(cb)).catch(() => res(30));
-            });
-        }
 
         videoPlayer.addEventListener('timeupdate', () => {
             const f = Math.round(videoPlayer.currentTime * (parseFloat(fpsInput.value) || 30));
@@ -383,6 +338,7 @@
             else { endFrame = f; document.getElementById('endFrameText').textContent = f; }
         }
 
+        // --- PROCESAMIENTO ---
         function processCurrentMeasurement() {
             if (startFrame === null || endFrame === null) return;
             const load = parseFloat(document.getElementById('currentLoadInput').value);
@@ -392,133 +348,155 @@
             const vel = (parseFloat(document.getElementById('distanceInput').value) / 100) / time;
 
             if (registrationMode === 'profile') {
-                allData[currentExercise].push({ load, velocity: vel });
+                allData[currentExercise].push({ load, velocity: vel, timestamp: Date.now() });
                 localStorage.setItem('vbt_data', JSON.stringify(allData));
                 updateUI();
             } else {
-                if (allData[currentExercise].length < 2) return alert("Crea un perfil base primero");
-                applyDailyAdjustment(load, vel);
+                const profile = calculateRM(currentExercise);
+                if (!profile) return alert("Crea un perfil base primero");
+                applyDailyAdjustment(load, vel, profile);
             }
             startFrame = endFrame = null;
             document.getElementById('startFrameText').textContent = document.getElementById('endFrameText').textContent = "--";
         }
 
-        function updateUI() {
-            const entries = allData[currentExercise];
-            if (!entries.length) {
-                entriesList.innerHTML = `<p class="text-slate-400 text-xs italic text-center py-4">Sube videos de cargas bajas y medias para el perfil</p>`;
-                document.getElementById('rmResultContainer').classList.add('hidden');
-                document.getElementById('plannerSection').classList.add('hidden');
-                return;
-            }
-
-            entriesList.innerHTML = entries.map((e, i) => `
-                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
-                    <div class="flex flex-col">
-                        <span class="text-[9px] font-black text-slate-400 uppercase">Carga (kg)</span>
-                        <input type="number" value="${e.load}" onchange="editEntry(${i}, 'load', this.value)" class="editable-input">
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-[9px] font-black text-slate-400 uppercase">Vel (m/s)</span>
-                        <input type="number" step="0.01" value="${e.velocity.toFixed(2)}" onchange="editEntry(${i}, 'velocity', this.value)" class="editable-input font-mono">
-                    </div>
-                    <button onclick="removeEntry(${i})" class="text-rose-400 p-1 hover:bg-rose-50 rounded-lg transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                    </button>
-                </div>`).join('');
-
-            if (entries.length >= 2) calcProfile();
-            else {
-                document.getElementById('rmResultContainer').classList.add('hidden');
-                document.getElementById('plannerSection').classList.add('hidden');
-            }
-        }
-
-        function editEntry(i, field, val) {
-            allData[currentExercise][i][field] = parseFloat(val);
-            localStorage.setItem('vbt_data', JSON.stringify(allData));
-            updateUI();
-        }
-
-        function removeEntry(i) {
-            allData[currentExercise].splice(i, 1);
-            localStorage.setItem('vbt_data', JSON.stringify(allData));
-            updateUI();
-        }
-
-        function calcProfile() {
-            const entries = allData[currentExercise];
+        function calculateRM(ex) {
+            const entries = allData[ex];
+            if (entries.length < 2) return null;
             const x = entries.map(e => e.velocity), y = entries.map(e => e.load), n = x.length;
             const sX = x.reduce((a, b) => a + b, 0), sY = y.reduce((a, b) => a + b, 0);
             const sXY = x.reduce((p, c, i) => p + (c * y[i]), 0), sXX = x.reduce((a, b) => a + (b * b), 0);
-            
             const den = (n * sXX - sX * sX);
-            if (den === 0) return;
-            
-            currentSlope = (n * sXY - sX * sY) / den;
-            const intercept = (sY - currentSlope * sX) / n;
-            
+            if (den === 0) return null;
+            const slope = (n * sXY - sX * sY) / den;
+            const intercept = (sY - slope * sX) / n;
+            const rm = slope * V1RM[ex] + intercept;
+
             const yM = sY/n;
             const ssT = y.reduce((a,v) => a + Math.pow(v-yM, 2), 0);
-            const ssR = y.reduce((a,v,i) => a + Math.pow(v - (currentSlope*x[i] + intercept), 2), 0);
-            const r2 = ssT === 0 ? 1 : 1 - (ssR/ssT);
-
-            profileRM = currentSlope * V1RM[currentExercise] + intercept;
-            
-            document.getElementById('rmValue').textContent = profileRM.toFixed(1);
-            document.getElementById('r2Value').textContent = r2.toFixed(3);
-            document.getElementById('rmResultContainer').classList.remove('hidden');
-            document.getElementById('plannerSection').classList.remove('hidden');
-            
-            updatePlan();
+            const ssR = y.reduce((a,v,i) => a + Math.pow(v - (slope*x[i] + intercept), 2), 0);
+            return { rm, r2: ssT === 0 ? 1 : 1 - (ssR/ssT), slope };
         }
 
-        function applyDailyAdjustment(load, vel) {
-            dailyRM = load + currentSlope * (V1RM[currentExercise] - vel);
-            const diff = dailyRM - profileRM;
-            const diffPct = (diff / profileRM) * 100;
-            
+        function updateUI() {
+            const profile = calculateRM(currentExercise);
+            if (profile) {
+                document.getElementById('rmValue').textContent = profile.rm.toFixed(1);
+                document.getElementById('r2Value').textContent = profile.r2.toFixed(3);
+                document.getElementById('rmResultContainer').classList.remove('hidden');
+                document.getElementById('plannerSection').classList.remove('hidden');
+                document.getElementById('noDataWarning').classList.add('hidden');
+                updatePlan(profile.rm);
+            } else {
+                document.getElementById('rmResultContainer').classList.add('hidden');
+                document.getElementById('plannerSection').classList.add('hidden');
+                document.getElementById('noDataWarning').classList.remove('hidden');
+            }
+        }
+
+        function applyDailyAdjustment(load, vel, profile) {
+            dailyRM = load + profile.slope * (V1RM[currentExercise] - vel);
+            const diff = dailyRM - profile.rm;
             document.getElementById('dailyRMValue').textContent = dailyRM.toFixed(1);
-            document.getElementById('dailyMeasuredVel').textContent = vel.toFixed(2);
-            document.getElementById('dailyMeasuredLoad').textContent = load;
-            document.getElementById('dailyDiff').textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}kg (${diffPct.toFixed(1)}%)`;
-            document.getElementById('dailyDiff').className = `text-[10px] font-bold px-2 py-1 rounded-lg ${diff >= 0 ? 'bg-emerald-400/30' : 'bg-rose-400/30'}`;
-            
+            document.getElementById('dailyDiff').textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}kg`;
             document.getElementById('dailyAdjustSection').classList.remove('hidden');
-            document.getElementById('suggestedBox').className = "p-6 bg-emerald-50 rounded-2xl border-2 border-emerald-200 text-center transition-all";
-            
-            updatePlan();
+            updatePlan(dailyRM);
         }
 
-        function updatePlan() {
-            const activeRM = dailyRM || profileRM;
-            if (activeRM <= 0) return;
-            const p = RPE_CHART[document.getElementById('planReps').value]?.[document.getElementById('planRPE').value] || 0;
-            if (p > 0) {
-                document.getElementById('suggestedWeight').textContent = (activeRM * (p / 100)).toFixed(1);
-                document.getElementById('intensityInfo').textContent = `${p}% del RM ${dailyRM ? 'Diario' : 'Base'}`;
-                document.getElementById('intensityInfo').className = `text-[10px] mt-2 font-black uppercase tracking-widest ${dailyRM ? 'text-emerald-600' : 'text-slate-400'}`;
-                document.getElementById('suggestedWeight').parentElement.className = `flex justify-center items-baseline gap-2 ${dailyRM ? 'text-emerald-700' : 'text-slate-800'}`;
+        function updatePlan(activeRM) {
+            const r = document.getElementById('planReps').value;
+            const p = document.getElementById('planRPE').value;
+            const intensity = RPE_CHART[r]?.[p] || 0;
+            if (intensity > 0) {
+                document.getElementById('suggestedWeight').textContent = `${(activeRM * (intensity/100)).toFixed(1)} kg`;
+                document.getElementById('intensityInfo').textContent = `${intensity}% del RM actual`;
             }
         }
 
-        function resetDaily() {
-            dailyRM = null;
-            document.getElementById('dailyAdjustSection').classList.add('hidden');
-            document.getElementById('suggestedBox').className = "p-6 bg-slate-50 rounded-2xl border border-slate-200 text-center transition-all";
-            updatePlan();
+        // --- HISTORIAL ---
+        function renderHistory() {
+            const grid = document.getElementById('rmGrid');
+            const lists = document.getElementById('exerciseHistoryLists');
+            grid.innerHTML = "";
+            lists.innerHTML = "";
+
+            Object.keys(EX_NAMES).forEach(ex => {
+                const profile = calculateRM(ex);
+                
+                // Card de Resumen
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-2xl custom-shadow border border-slate-100 text-center";
+                card.innerHTML = `
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">${EX_NAMES[ex]}</p>
+                    <p class="text-2xl font-black text-slate-800">${profile ? profile.rm.toFixed(1) : '--'} <span class="text-xs">kg</span></p>
+                    <p class="text-[8px] font-bold text-blue-500">R²: ${profile ? profile.r2.toFixed(2) : '0.00'}</p>
+                `;
+                grid.appendChild(card);
+
+                // Lista de registros
+                const listContainer = document.createElement('div');
+                listContainer.className = "bg-white rounded-2xl border border-slate-100 p-4 space-y-3";
+                listContainer.innerHTML = `<h4 class="text-xs font-black text-slate-800 uppercase mb-2 border-b pb-2">${EX_NAMES[ex]}</h4>`;
+                
+                const entries = allData[ex];
+                if (entries.length === 0) {
+                    listContainer.innerHTML += `<p class="text-[10px] text-slate-400 italic">Sin datos registrados.</p>`;
+                } else {
+                    entries.forEach((e, i) => {
+                        const row = document.createElement('div');
+                        row.className = "flex items-center justify-between gap-2 p-2 bg-slate-50 rounded-lg group";
+                        row.innerHTML = `
+                            <div class="flex gap-3">
+                                <div class="flex flex-col">
+                                    <span class="text-[8px] font-bold text-slate-400 uppercase">Kg</span>
+                                    <input type="number" value="${e.load}" onchange="editEntry('${ex}', ${i}, 'load', this.value)" class="w-12 bg-transparent font-bold text-xs focus:outline-none">
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[8px] font-bold text-slate-400 uppercase">m/s</span>
+                                    <input type="number" step="0.01" value="${e.velocity.toFixed(2)}" onchange="editEntry('${ex}', ${i}, 'velocity', this.value)" class="w-12 bg-transparent font-mono text-xs focus:outline-none">
+                                </div>
+                            </div>
+                            <button onclick="removeEntry('${ex}', ${i})" class="text-rose-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                        `;
+                        listContainer.appendChild(row);
+                    });
+                }
+                lists.appendChild(listContainer);
+            });
         }
 
-        function clearCurrentExercise() {
-            if(confirm("¿Borrar todo el perfil de este ejercicio?")) {
-                allData[currentExercise] = [];
-                localStorage.setItem('vbt_data', JSON.stringify(allData));
-                switchExercise(currentExercise);
-            }
+        function editEntry(ex, i, field, val) {
+            allData[ex][i][field] = parseFloat(val);
+            saveData();
+            renderHistory();
         }
 
-        document.getElementById('planReps').addEventListener('input', updatePlan);
-        document.getElementById('planRPE').addEventListener('change', updatePlan);
+        function removeEntry(ex, i) {
+            allData[ex].splice(i, 1);
+            saveData();
+            renderHistory();
+        }
+
+        function saveData() {
+            localStorage.setItem('vbt_data', JSON.stringify(allData));
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "vbt_backup_" + new Date().toLocaleDateString() + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function resetDaily() { dailyRM = null; document.getElementById('dailyAdjustSection').classList.add('hidden'); updateUI(); }
+
+        document.getElementById('planReps').addEventListener('input', () => updateUI());
+        document.getElementById('planRPE').addEventListener('change', () => updateUI());
     </script>
 </body>
 </html>
