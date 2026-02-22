@@ -60,7 +60,7 @@
         <!-- VISTA DE ANALIZADOR -->
         <main id="analyzerView" class="space-y-6">
             
-            <!-- CARGA DE VIDEO -->
+            <!-- CARGA DE VIDEO Y FPS -->
             <section class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div class="flex items-center gap-3 bg-blue-50 px-4 py-3 rounded-xl border border-blue-100 shrink-0 w-full md:w-auto">
@@ -100,6 +100,7 @@
                     </div>
 
                     <div class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100">
+                        <!-- Línea de tiempo y frames -->
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex gap-2">
                                 <button onclick="stepFrame(-1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition">
@@ -112,6 +113,7 @@
                             <input type="range" id="frameSlider" value="0" min="0" step="1" class="flex-grow mx-4 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                         </div>
 
+                        <!-- Marcado de frames -->
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <button onclick="markFrame('start')" class="py-3 px-4 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-xl hover:bg-emerald-100 transition flex flex-col items-center">
                                 <span class="text-[10px] font-bold uppercase opacity-60">Inicio</span>
@@ -123,6 +125,7 @@
                             </button>
                         </div>
 
+                        <!-- Configuración del levantamiento -->
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Carga Serie (kg)</label>
@@ -134,6 +137,7 @@
                             </div>
                         </div>
 
+                        <!-- Modos de registro -->
                         <div class="mb-6">
                             <p class="text-[10px] font-black text-slate-400 uppercase mb-3 text-center">Modo de registro</p>
                             <div class="flex gap-2">
@@ -146,7 +150,7 @@
                     </div>
                 </div>
 
-                <!-- COLUMNA DERECHA: RESULTADOS -->
+                <!-- COLUMNA DERECHA: RESULTADOS Y EDICIÓN -->
                 <div class="lg:col-span-5 space-y-6">
                     <!-- Resumen del último levantamiento -->
                     <section id="lastRepSummary" class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100 hidden">
@@ -162,6 +166,7 @@
                         </div>
                     </section>
 
+                    <!-- Resultados del Perfil 1RM -->
                     <section class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest" id="exerciseTitle">Perfil Base</h2>
@@ -182,6 +187,14 @@
                             </div>
                         </div>
                         <div id="noDataWarning" class="text-center py-6 text-slate-400 text-xs italic">Añade al menos 2 levantamientos para generar el perfil.</div>
+                    </section>
+
+                    <!-- LISTA EDITABLE DE REGISTROS -->
+                    <section class="bg-white p-6 rounded-2xl custom-shadow border border-slate-100">
+                        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Registros del Perfil (Editables)</h2>
+                        <div id="currentExerciseList" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                            <!-- Los registros se cargan aquí dinámicamente -->
+                        </div>
                     </section>
 
                     <section id="dailyAdjustSection" class="bg-white p-6 rounded-2xl custom-shadow border-2 border-transparent hidden">
@@ -215,21 +228,17 @@
             </div>
         </main>
 
-        <!-- VISTA DE HISTORIAL -->
+        <!-- VISTA DE HISTORIAL GLOBAL -->
         <main id="historyView" class="hidden space-y-8">
-            <header class="flex justify-between items-end">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-800 uppercase italic">Resumen de Perfiles</h2>
-                    <p class="text-slate-500 text-sm">Historial de cargas y velocidades registradas.</p>
-                </div>
-                <button id="exportButton" onclick="exportData()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl uppercase tracking-widest hover:bg-slate-700 transition">Descargar registro</button>
+            <header>
+                <h2 class="text-2xl font-black text-slate-800 uppercase italic">Resumen de Perfiles</h2>
+                <p class="text-slate-500 text-sm">Visión general de todos tus ejercicios.</p>
             </header>
 
             <div id="rmGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-
-            <div class="space-y-6">
-                <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">Registros por Ejercicio (Editables)</h3>
-                <div id="exerciseHistoryLists" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            
+            <div class="bg-white p-8 rounded-3xl custom-shadow border border-slate-100 text-center">
+                <p class="text-slate-500 text-sm italic">Para editar o borrar registros específicos, ve a la pestaña de cada ejercicio.</p>
             </div>
         </main>
     </div>
@@ -264,7 +273,7 @@
             if (ex === 'history') {
                 document.getElementById('analyzerView').classList.add('hidden');
                 document.getElementById('historyView').classList.remove('hidden');
-                renderHistory();
+                renderGlobalGrid();
             } else {
                 document.getElementById('analyzerView').classList.remove('hidden');
                 document.getElementById('historyView').classList.add('hidden');
@@ -280,23 +289,11 @@
             document.getElementById('btnModeDaily').classList.toggle('mode-active-daily', mode === 'daily');
         }
 
-        // Intenta detectar FPS automáticamente usando Metadata de MediaSession o estimación
         document.getElementById('videoInput').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            
-            const videoUrl = URL.createObjectURL(file);
-            videoPlayer.src = videoUrl;
-            
-            videoPlayer.onloadedmetadata = () => {
-                // Intento de detección: Algunos navegadores exponen rAF hints o podemos intentar leer de la pista
-                // Como JS nativo no da FPS exactos fácilmente sin librerías pesadas, usamos una técnica de "check"
-                // Pero priorizamos lo que el usuario vea o lo que sea estándar.
-                
-                // Si el video tiene pistas de video, intentamos inferir o dejar en 30 por defecto.
-                // En móviles/iPhone suele ser 30 o 60.
-                syncFramesWithFPS();
-            };
+            videoPlayer.src = URL.createObjectURL(file);
+            videoPlayer.onloadedmetadata = () => syncFramesWithFPS();
         });
 
         function syncFramesWithFPS() {
@@ -350,7 +347,7 @@
             document.getElementById('lastVM').textContent = velMedia.toFixed(2);
 
             if (registrationMode === 'profile') {
-                allData[currentExercise].push({ load, velocity: velMedia, timestamp: Date.now() });
+                allData[currentExercise].unshift({ load, velocity: velMedia, timestamp: Date.now() });
                 localStorage.setItem('vbt_data', JSON.stringify(allData));
                 updateUI();
             } else {
@@ -377,6 +374,7 @@
         }
 
         function updateUI() {
+            renderCurrentExerciseList();
             const profile = calculateRM(currentExercise);
             if (profile) {
                 document.getElementById('rmValue').textContent = profile.rm.toFixed(1);
@@ -386,10 +384,77 @@
                 document.getElementById('noDataWarning').classList.add('hidden');
                 updatePlan(profile.rm);
             } else {
+                document.getElementById('rmValue').textContent = "0.0";
+                document.getElementById('r2Value').textContent = "0.000";
                 document.getElementById('rmResultContainer').classList.add('hidden');
                 document.getElementById('plannerSection').classList.add('hidden');
                 document.getElementById('noDataWarning').classList.remove('hidden');
             }
+        }
+
+        function renderCurrentExerciseList() {
+            const listDiv = document.getElementById('currentExerciseList');
+            listDiv.innerHTML = "";
+            const entries = allData[currentExercise];
+
+            if (entries.length === 0) {
+                listDiv.innerHTML = `<p class="text-[10px] text-slate-400 italic text-center py-4">Sin registros para este ejercicio.</p>`;
+                return;
+            }
+
+            entries.forEach((e, i) => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-2.5 bg-slate-50 rounded-xl text-xs gap-3 border border-slate-100 hover:border-blue-200 transition-colors";
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 flex-grow">
+                        <div class="flex flex-col">
+                            <span class="text-[8px] uppercase text-slate-400 font-bold">Kg</span>
+                            <input type="number" step="0.5" value="${e.load}" 
+                                onchange="updateEntryValue('${currentExercise}', ${i}, 'load', this.value)"
+                                class="w-16 bg-transparent outline-none font-bold text-slate-800 border-b border-transparent focus:border-blue-400">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[8px] uppercase text-slate-400 font-bold">m/s</span>
+                            <input type="number" step="0.01" value="${e.velocity.toFixed(2)}" 
+                                onchange="updateEntryValue('${currentExercise}', ${i}, 'velocity', this.value)"
+                                class="w-16 bg-transparent outline-none font-bold text-blue-600 border-b border-transparent focus:border-blue-400">
+                        </div>
+                    </div>
+                    <button onclick="removeEntry('${currentExercise}', ${i})" class="text-slate-300 hover:text-rose-500 p-1.5 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                `;
+                listDiv.appendChild(item);
+            });
+        }
+
+        function updateEntryValue(ex, index, field, value) {
+            const numVal = parseFloat(value);
+            if (!isNaN(numVal)) {
+                allData[ex][index][field] = numVal;
+                localStorage.setItem('vbt_data', JSON.stringify(allData));
+                updateUI();
+            }
+        }
+
+        function removeEntry(ex, i) { 
+            allData[ex].splice(i, 1); 
+            localStorage.setItem('vbt_data', JSON.stringify(allData)); 
+            updateUI(); 
+        }
+
+        function renderGlobalGrid() {
+            const grid = document.getElementById('rmGrid');
+            grid.innerHTML = "";
+            Object.keys(EX_NAMES).forEach(ex => {
+                const profile = calculateRM(ex);
+                grid.innerHTML += `
+                    <div class="bg-white p-5 rounded-3xl custom-shadow border text-center">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">${EX_NAMES[ex]}</p>
+                        <p class="text-3xl font-black text-slate-800">${profile ? profile.rm.toFixed(1) : '--'}</p>
+                        <p class="text-[9px] text-slate-400 mt-2">${allData[ex].length} series registradas</p>
+                    </div>`;
+            });
         }
 
         function applyDailyAdjustment(load, vel, profile) {
@@ -407,78 +472,6 @@
             const intensity = RPE_CHART[r]?.[p] || (100 - (r-1)*3); 
             document.getElementById('suggestedWeight').textContent = `${(activeRM * (intensity/100)).toFixed(1)} kg`;
             document.getElementById('intensityInfo').textContent = `${intensity}% del RM`;
-        }
-
-        function updateEntryValue(ex, index, field, value) {
-            const numVal = parseFloat(value);
-            if (!isNaN(numVal)) {
-                allData[ex][index][field] = numVal;
-                localStorage.setItem('vbt_data', JSON.stringify(allData));
-            }
-        }
-
-        function renderHistory() {
-            const grid = document.getElementById('rmGrid');
-            const lists = document.getElementById('exerciseHistoryLists');
-            grid.innerHTML = ""; lists.innerHTML = "";
-
-            Object.keys(EX_NAMES).forEach(ex => {
-                const profile = calculateRM(ex);
-                grid.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl custom-shadow border text-center">
-                        <p class="text-[9px] font-black text-slate-400 uppercase">${EX_NAMES[ex]}</p>
-                        <p class="text-2xl font-black text-slate-800">${profile ? profile.rm.toFixed(1) : '--'}</p>
-                    </div>`;
-
-                let listHtml = `<div class="bg-white rounded-2xl border p-4 space-y-3 shadow-sm">
-                    <h4 class="text-xs font-black uppercase border-b pb-2 flex justify-between items-center">
-                        <span>${EX_NAMES[ex]}</span>
-                        <span class="text-[9px] text-slate-400 normal-case font-medium">Pulsa en los valores para editar</span>
-                    </h4>`;
-                
-                if (allData[ex].length === 0) {
-                    listHtml += `<p class="text-[10px] text-slate-400 italic text-center py-2">Sin registros</p>`;
-                }
-
-                allData[ex].forEach((e, i) => {
-                    listHtml += `
-                        <div class="flex items-center justify-between p-2 bg-slate-50 rounded-lg text-xs gap-2">
-                            <div class="flex items-center gap-2 flex-grow">
-                                <div class="flex flex-col">
-                                    <span class="text-[8px] uppercase text-slate-400 font-bold">Kg</span>
-                                    <input type="number" step="0.5" value="${e.load}" 
-                                        onchange="updateEntryValue('${ex}', ${i}, 'load', this.value)"
-                                        class="w-16 bg-transparent border-b border-transparent focus:border-blue-500 outline-none font-bold">
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[8px] uppercase text-slate-400 font-bold">m/s</span>
-                                    <input type="number" step="0.01" value="${e.velocity.toFixed(2)}" 
-                                        onchange="updateEntryValue('${ex}', ${i}, 'velocity', this.value)"
-                                        class="w-16 bg-transparent border-b border-transparent focus:border-blue-500 outline-none font-bold">
-                                </div>
-                            </div>
-                            <button onclick="removeEntry('${ex}', ${i})" class="text-rose-400 p-1.5 hover:bg-rose-100 rounded-lg transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </button>
-                        </div>`;
-                });
-                lists.innerHTML += listHtml + `</div>`;
-            });
-        }
-
-        function removeEntry(ex, i) { 
-            allData[ex].splice(i, 1); 
-            localStorage.setItem('vbt_data', JSON.stringify(allData)); 
-            renderHistory(); 
-        }
-
-        function exportData() {
-            const blob = new Blob([JSON.stringify(allData)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); 
-            a.href = url; 
-            a.download = 'vbt_data.json'; 
-            a.click();
         }
 
         document.getElementById('planReps').addEventListener('input', updateUI);
