@@ -87,7 +87,7 @@
                     <div class="flex flex-wrap gap-4 flex-grow items-end w-full">
                         <div class="w-full md:w-32">
                             <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">FPS Video</label>
-                            <input type="number" id="fpsInput" value="30" oninput="syncFramesWithFPS()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-mono font-bold text-blue-600">
+                            <input type="number" id="fpsInput" value="30" oninput="saveSettings(); syncFramesWithFPS();" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-mono font-bold text-blue-600">
                         </div>
                         <div class="flex-grow">
                             <input type="file" id="videoInput" accept="video/*" class="hidden">
@@ -141,7 +141,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Recorrido (cm)</label>
-                                <input type="number" id="distanceInput" value="45" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                                <input type="number" id="distanceInput" value="45" oninput="saveSettings()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-blue-600">
                             </div>
                         </div>
 
@@ -258,14 +258,28 @@
         
         let currentExercise = 'bench';
         let registrationMode = 'profile'; 
+        
+        // Carga de datos
         let allData = JSON.parse(localStorage.getItem('vbt_data')) || { bench: [], squat: [], deadlift: [], pullup: [] };
+        
+        // Carga de configuración (FPS y Distancias)
+        let settings = JSON.parse(localStorage.getItem('vbt_settings')) || {
+            fps: 30,
+            distances: { bench: 45, squat: 60, deadlift: 50, pullup: 55 }
+        };
+
         let startFrame = null, endFrame = null;
 
         const videoPlayer = document.getElementById('videoPlayer');
         const frameSlider = document.getElementById('frameSlider');
         const fpsInput = document.getElementById('fpsInput');
+        const distInput = document.getElementById('distanceInput');
 
-        window.onload = () => switchExercise(currentExercise);
+        window.onload = () => {
+            // Aplicar FPS guardados
+            fpsInput.value = settings.fps;
+            switchExercise(currentExercise);
+        };
 
         function switchExercise(ex) {
             currentExercise = ex;
@@ -280,8 +294,21 @@
                 document.getElementById('historyView').classList.add('hidden');
                 document.getElementById('v1rmDisplay').textContent = `${V1RM[ex].toFixed(2)} m/s`;
                 document.getElementById('exerciseTitle').textContent = `Perfil: ${EX_NAMES[ex]}`;
+                
+                // Cargar distancia específica de este ejercicio
+                distInput.value = settings.distances[ex] || 45;
+                
                 updateUI();
             }
+        }
+
+        // Persistencia de configuración
+        function saveSettings() {
+            settings.fps = parseFloat(fpsInput.value) || 30;
+            if (currentExercise !== 'history') {
+                settings.distances[currentExercise] = parseFloat(distInput.value) || 45;
+            }
+            localStorage.setItem('vbt_settings', JSON.stringify(settings));
         }
 
         function setRegMode(mode) {
@@ -336,7 +363,7 @@
             
             const fps = parseFloat(fpsInput.value) || 30;
             const time = (endFrame - startFrame) / fps;
-            const velMedia = (parseFloat(document.getElementById('distanceInput').value) / 100) / time;
+            const velMedia = (parseFloat(distInput.value) / 100) / time;
 
             document.getElementById('lastRepSummary').classList.remove('hidden');
             document.getElementById('lastVM').textContent = velMedia.toFixed(2);
@@ -354,9 +381,10 @@
             document.getElementById('startFrameText').textContent = document.getElementById('endFrameText').textContent = "--";
         }
 
-        function saveData() { localStorage.setItem('vbt_data', JSON.stringify(allData)); }
+        function saveData() { 
+            localStorage.setItem('vbt_data', JSON.stringify(allData)); 
+        }
 
-        // El Test Diario NO se usa para la regresión del Perfil Base
         function calculateBaseRM(ex) {
             const entries = allData[ex].filter(e => !e.isDaily);
             if (entries.length < 2) return null;
@@ -394,7 +422,6 @@
 
                 const dailyEntry = allData[currentExercise].find(e => e.isDaily);
                 if (dailyEntry) {
-                    // Cálculo diario usando el slope base: Carga_RM_hoy = Carga_actual + slope * (v_1rm - v_actual)
                     const dailyRM = dailyEntry.load + profile.slope * (V1RM[currentExercise] - dailyEntry.velocity);
                     document.getElementById('dailyRMValue').textContent = dailyRM.toFixed(1);
                     const diff = dailyRM - profile.rm;
@@ -458,7 +485,6 @@
         function updatePlan(activeRM) {
             const r = parseInt(document.getElementById('planReps').value) || 1;
             const rpe = parseFloat(document.getElementById('planRPE').value) || 10;
-            // Ecuación de Brzycki / Estimación RPE simplificada
             const intensity = 100 - ((r - 1) * 3) - ((10 - rpe) * 2.5);
             const weight = (activeRM * (intensity/100)).toFixed(1);
             document.getElementById('suggestedWeight').textContent = `${weight} kg`;
@@ -468,7 +494,7 @@
         document.getElementById('planReps').addEventListener('input', updateUI);
         document.getElementById('planRPE').addEventListener('change', updateUI);
         function resetDaily() { allData[currentExercise] = allData[currentExercise].filter(e => !e.isDaily); saveData(); updateUI(); }
-        function clearAllData() { if(confirm("¿Estás seguro de que quieres borrar todos los perfiles de todos los ejercicios?")) { allData = { bench: [], squat: [], deadlift: [], pullup: [] }; saveData(); renderGlobalGrid(); } }
+        function clearAllData() { if(confirm("¿Estás seguro de que quieres borrar todos los datos?")) { allData = { bench: [], squat: [], deadlift: [], pullup: [] }; saveData(); renderGlobalGrid(); } }
     </script>
 </body>
 </html>
